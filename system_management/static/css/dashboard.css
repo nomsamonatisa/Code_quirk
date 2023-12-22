@@ -1,0 +1,146 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600&display=swap');
+
+/* General Styles */
+body,
+html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Work Sans', sans-serif !important;
+    /* color: #333; */
+    background-color: #D6E2FF !important;
+}
+
+/* Sidebar Styles */
+
+.sidebar .nav-link {
+    color: white;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: #725AEC;
+    /* Darker Gray */
+    color: white;
+}
+
+.sidebar-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+
+.bg-blue {
+    background-color: #001138!important;
+    color: #001138!important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: 0;
+        height: auto;
+    }
+
+    .sidebar-sticky {
+        position: static;
+        height: auto;
+    }
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    background-color: #B4F500!important;
+    color: #000000;
+    border: none !important;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #98CF00 !important;
+}
+
+.challenge {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: auto;
+}
+
+.title {
+    color: #333;
+    text-align: center;
+}
+
+.difficulty {
+    background-color: #efefef;
+    border-radius: 4px;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    color: #555;
+}
+
+.problem-statement, .function-signature, .inputs, .example {
+    background-color: white;
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+h2 {
+    color: #007bff;
+}
+
+pre {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+code {
+    color: #d63384;
+}
+
+.overlay{
+    background: none repeat scroll 0 0 black;
+    position: fixed;
+    display: block;
+    opacity: 0.5;
+    z-index: 1000001;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.logo-container {
+    padding: 10px;
+    text-align: center; /* Centers the logo horizontally */
+}
+
+.logo-container img {
+    max-width: 100%; /* Ensures the logo fits within the container */
+    height: auto; /* Maintains the aspect ratio of the logo */
+}

@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeQuirk - Decoding the Future</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact">Contact</a>
+        <a href="{% url 'login' %}">Login</a>
+      </nav>
+      <div class="hero">
+        <h1>Welcome to Code Quirk!</h1>
+        <p>Master Python Programming with Interactive Lessons.</p>
+        <a href="{% url 'register' %}" class="cta-button">Get Started</a>
+      </div>
+    </header>
+
+    <section class="features" id="features">
+      <h2>Our Features</h2>
+      <div class="feature-container">
+          <div class="feature-card">
+              <h3>Interactive Coding Environment</h3>
+              <p>Learn Python by coding directly in your browser.</p>
+          </div>
+          <div class="feature-card">
+              <h3>Expert Support</h3>
+              <p>Get guidance from experienced Python developers.</p>
+          </div>
+          <div class="feature-card">
+              <h3>Progress Tracking</h3>
+              <p>Monitor your learning journey with our progress tracker.</p>
+          </div>
+      </div>
+  </section>
+
+    <section class="testimonials" id="testimonials">
+      <h2>What Our Users Say</h2>
+      <div class="testimonial-item">
+        <p>
+          "Code Quirk has been a game changer in my Python learning path!" -
+          Alex
+        </p>
+      </div>
+      <div class="testimonial-item">
+        <p>
+          "The interactive exercises make learning Python both fun and
+          effective." - Jamie
+        </p>
+      </div>
+    </section>
+    <footer>
+      <p>&copy; 2023 Code Quirk. All Rights Reserved.</p>
+      <p>
+        Contact us at <a href="mailto:info@codequirk.com">info@codequirk.com</a>
+      </p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,155 @@
+{% extends "dashboard_index.html" %} {% load static %} {% block content %}
+<div class="container-fluid bg-light shadow rounded-3 p-3">
+  <h1 class="text-decoration-underline mb-3">Coding Challenge</h1>
+  <p id="problem-statement">
+    <!-- Problem statement goes here -->
+  </p>
+
+  <div class="challenge my-5">
+    <h2 for="difficulty-level">Generate New Challenge:</h2>
+    <div class="row">
+      <div class="col-md-2">
+        <select
+          class="form-select form-select-sm"
+          id="difficulty-level"
+          name="difficulty-level"
+          required
+        >
+          <option value="">Select Difficulty</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+      </div>
+      <div class="overlay d-none">
+        <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+          <div class="spinner-grow spinner-grow-lg text-warning" style="width: 5rem; height: 5rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-sm btn-primary text-black" id="generate-button">
+          Generate Challenge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="challenge my-5 d-none" id="challenge_display">
+    <h1 class="title"></h1>
+    <p class="difficulty text-uppercase"> </p>
+    <div class="problem-statement">
+      <h2>Problem Statement</h2>
+      <p>
+        
+      </p>
+    </div>
+    <div class="function-signature">
+      <h2>Function Signature</h2>
+      <pre><code></code></pre>
+    </div>
+    <div class="inputs">
+      <h2>Inputs</h2>
+      <p>
+      </p>
+    </div>
+    <div class="example">
+      <h2>Example</h2>
+      <pre><code></code></pre>
+    </div>
+  </div>
+
+  <div id="code-input" class="my-5 challenge">
+    <h2 for="code-editor">Code Input:</h2>
+    <textarea id="code-editor"></textarea>
+  </div>
+
+  <div id="code-output" class="my-5 challenge">
+    <h2 for="code-results">Code Output:</h2>
+    <pre><code></code></pre>
+  </div>
+
+  <button class="btn btn-sm btn-primary text-black" id="run-code">Run Code</button>
+  <button class="btn btn-sm btn-primary text-black" id="submit-code">Submit Code</button>
+</div>
+{% endblock content %} {% block javascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js"></script>
+
+<!-- Include any additional modes or themes here -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/python/python.min.js"></script>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+  crossorigin="anonymous"
+></script>
+<script>
+  var editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+    lineNumbers: true,
+    mode: "python",
+    theme: "darcula",
+  });
+
+  $(document).on("click", "#generate-button", function () {
+    var difficulty_level = $("#difficulty-level").val();
+
+    if (difficulty_level === "") {
+      alert("please select difficulty");
+    } else {
+      $.ajax({
+        url: "{% url 'generate_challenge' %}",
+        type: "POST",
+        data: {
+          difficulty_level: difficulty_level,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        beforeSend: function(){
+          $('.overlay').removeClass('d-none');
+        },
+        success: function (response) {
+          console.log(response.data);
+          data = response.data;
+          console.log(data['challenge title'])
+          $('.title').text(data['challenge title']); // Set the title
+            $('.difficulty').text(data['difficulty level']); // Append difficulty level
+            $('.problem-statement p').text(data['problem statement']); // Set the problem statement
+            $('.function-signature code').text(data['function signature']); // Set the function signature
+            $('.inputs p').text(data['function inputs']);
+            $('.example code').text(data['example']);
+        },
+        complete: function(){
+          $('.overlay').addClass('d-none');
+          $('#challenge_display').removeClass('d-none')
+        },
+      });
+    }
+  });
+
+  $(document).ready(function(){
+    $('#run-code').click(function(){
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'run_code' %}", // URL of your Django view
+            data: {
+                'code': editor.getValue(), // Get code from CodeMirror editor
+                'csrfmiddlewaretoken': '{{ csrf_token }}' // CSRF token for security
+            },
+            success: function(response){
+                $('#code-output code').text('');
+                data = JSON.parse(response.result);
+                data.forEach((string_, index, arr) => {
+                  console.log(string_);
+                  $('#code-output code').append(string_);
+                })
+            },
+            error: function(){
+              $('.code-output code').text('An error occured');
+            }
+        });
+    });
+});
+</script>
+{% endblock javascript %}
