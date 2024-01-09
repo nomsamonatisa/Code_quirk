@@ -1,0 +1,25 @@
+{% extends "dashboard_index.html" %} {% load static %}
+{% block title %} 
+<h1>Profile</h1>
+{% endblock title %}
+{% block content %}
+<div class="container-fluid bg-light shadow rounded-3 p-3">
+    <h1>User Profile</h1>
+
+    <form id="profileForm">
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName" required>
+  
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" required>
+  
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+  
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" required>
+  
+      <button type="button" onclick="submitForm()">Save Profile</button>
+    </form>
+</div>
+{% endblock content %}

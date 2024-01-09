@@ -50,15 +50,15 @@
 
             <ul class="nav flex-column">
               <li class="nav-item mx-2">
-                <a class="nav-link active text-white" href="#"
+                <a class="nav-link active text-white" href="{% url 'dashboard'%}"
                   ><i class="fa-solid fa-code me-2"></i>Challenges</a
                 >
               </li>
               <li class="nav-item mx-2">
-                <a class="nav-link text-white" href="#"><i class="fa-solid fa-chart-line me-2"></i>Progress</a>
+                <a class="nav-link text-white" href="{% url 'progress'%}"><i class="fa-solid fa-chart-line me-2"></i>Progress</a>
               </li>
               <li class="nav-item mx-2">
-                <a class="nav-link text-white" href="#"><i class="fa-regular fa-user me-2"></i>Profile</a>
+                <a class="nav-link text-white" href="{% url 'profile'%}"><i class="fa-regular fa-user me-2"></i>Profile</a>
               </li>
               <!-- More items... -->
             </ul>
@@ -71,7 +71,8 @@
           <header
             class="dashboard-header rounded-3 mx-4 p-3 bg-light mb-3 shadow"
           >
-            <h1>Dashboard Title</h1>
+            {% block title %}
+            {% endblock title %}
             <!-- Additional header content... -->
           </header>
 
@@ -86,6 +87,8 @@
     </div>
 
     {% block javascript %}
+    <!-- Include jQuery -->
+
     <!-- JavaScript goes here -->
     {% endblock javascript %}
   </body>

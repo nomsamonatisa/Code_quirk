@@ -1,6 +1,10 @@
-{% extends "dashboard_index.html" %} {% load static %} {% block content %}
+{% extends "dashboard_index.html" %} {% load static %}
+{% block title %} 
+<h1>Coding Challenges</h1>
+{% endblock title %}
+{% block content %}
 <div class="container-fluid bg-light shadow rounded-3 p-3">
-  <h1 class="text-decoration-underline mb-3">Coding Challenge</h1>
+  
   <p id="problem-statement">
     <!-- Problem statement goes here -->
   </p>
@@ -8,6 +12,7 @@
   <div class="challenge my-5">
     <h2 for="difficulty-level">Generate New Challenge:</h2>
     <div class="row">
+      <input type="hidden" class="challenge_id">
       <div class="col-md-2">
         <select
           class="form-select form-select-sm"
@@ -65,13 +70,15 @@
     <textarea id="code-editor"></textarea>
   </div>
 
+  <button class="btn btn-sm btn-primary text-black" id="run-code">Run Code</button>
+  <button class="btn btn-sm btn-primary text-black" id="submit-code">Submit Code</button>
+
   <div id="code-output" class="my-5 challenge">
     <h2 for="code-results">Code Output:</h2>
     <pre><code></code></pre>
   </div>
 
-  <button class="btn btn-sm btn-primary text-black" id="run-code">Run Code</button>
-  <button class="btn btn-sm btn-primary text-black" id="submit-code">Submit Code</button>
+  
 </div>
 {% endblock content %} {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -114,11 +121,13 @@
           data = response.data;
           console.log(data['challenge title'])
           $('.title').text(data['challenge title']); // Set the title
-            $('.difficulty').text(data['difficulty level']); // Append difficulty level
-            $('.problem-statement p').text(data['problem statement']); // Set the problem statement
-            $('.function-signature code').text(data['function signature']); // Set the function signature
-            $('.inputs p').text(data['function inputs']);
-            $('.example code').text(data['example']);
+          $('.difficulty').text(data['difficulty level']); // Append difficulty level
+          $('.problem-statement p').text(data['problem statement']); // Set the problem statement
+          $('.function-signature code').text(data['function signature']); // Set the function signature
+          $('.inputs p').text(data['function inputs']);
+          $('.example code').text(data['example']);
+          $('.challenge_id').val(data['challenge_id']);
+          editor.setValue(data['function signature']);
         },
         complete: function(){
           $('.overlay').addClass('d-none');
@@ -137,19 +146,57 @@
                 'code': editor.getValue(), // Get code from CodeMirror editor
                 'csrfmiddlewaretoken': '{{ csrf_token }}' // CSRF token for security
             },
+            beforeSend: function(){
+              $('.overlay').removeClass('d-none');
+            },
             success: function(response){
                 $('#code-output code').text('');
-                data = JSON.parse(response.result);
-                data.forEach((string_, index, arr) => {
-                  console.log(string_);
-                  $('#code-output code').append(string_);
-                })
+                console.log(response)
+                try {
+                  data = JSON.parse(response.result);
+                  data.forEach((string_, index, arr) => {
+                    console.log(string_);
+                    $('#code-output code').append(string_);
+                  })
+                } catch (error) {
+                  $('#code-output code').append(response.result);
+                }
             },
             error: function(){
               $('.code-output code').text('An error occured');
-            }
+            },
+            complete: function(){
+              $('.overlay').addClass('d-none');
+            },
         });
     });
+});
+
+$(document).ready(function(){
+  $('#submit-code').click(function(){
+    var challenge_id = $('.challenge_id').val();
+      $.ajax({
+          type: 'POST',
+          url: "{% url 'submit_code' %}", // URL of your Django view
+          data: {
+              'code': editor.getValue(), // Get code from CodeMirror editor
+              'challenge_id': challenge_id,
+              'csrfmiddlewaretoken': '{{ csrf_token }}' // CSRF token for security
+          },
+          beforeSend: function(){
+            $('.overlay').removeClass('d-none');
+          },
+          success: function(response){
+              $('#code-output code').text('');
+              var data = response.result;
+              $('#code-output code').append(data['output']);
+              
+          },
+          complete: function(){
+            $('.overlay').addClass('d-none');
+          },
+      });
+  });
 });
 </script>
 {% endblock javascript %}
